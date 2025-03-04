@@ -6,7 +6,7 @@ const corsPlugin = async (fastify: FastifyInstance, options: RegisterOptions) =>
     fastify.register(cors, {
         origin: [
             "http://localhost:8100",
-            "https://dttl-ui.vercel.app"
+            "https://lazy-garden.vercel.app"
         ],
     });
 }
