@@ -5,6 +5,7 @@ export const appRoutes = async (fastify: FastifyInstance) => {
 
     fastify.put("/device", { schema: buildPutDeviceSchema() }, async (req, reply) => await fastify.diContainer.cradle.devicesController.upsertDevice(req, reply));
     fastify.patch("/device/:id", { schema: buildPatchDeviceSchema() }, async (req, reply) => await fastify.diContainer.cradle.devicesController.patchDevice(req, reply));
+    fastify.get("/device/:id", { schema: buildGetDeviceSchema() }, async (req, reply) => await fastify.diContainer.cradle.devicesController.getDevice(req, reply));
 }
 
 const buildPutDeviceSchema = (): FastifySchema => {
@@ -29,6 +30,22 @@ const buildPatchDeviceSchema = (): FastifySchema => {
             "2xx": {
                 type: "null",
                 description: "Device patched"
+            }
+        }
+    } as FastifySchema;
+}
+const buildGetDeviceSchema = (): FastifySchema => {
+    return {
+        response: {
+            "4xx": { $ref: "4xxGenericResponse#", description: "A validation error was ocurred" },
+            "5xx": { $ref: "5xxGenericResponse#", description: "An internal error was ocurred" },
+            "2xx": {
+                description: "Device",
+                content: {
+                    "application/json": {
+                        schema: { $ref: "device#" }
+                    }
+                }
             }
         }
     } as FastifySchema;

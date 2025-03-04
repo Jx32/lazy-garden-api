@@ -28,6 +28,19 @@ export class DevicesController {
         reply.code(200);
     }
 
+    public async getDevice(req: FastifyRequest, reply: FastifyReply) {
+        const { id } = req.params as { id: string };
+
+        const device = await this.devicesService.getDevice(id);
+
+        if (!device) {
+            reply.code(404);
+            return;
+        }
+
+        reply.code(200).send(device);
+    }
+
     public dispose() {
 
     }

@@ -28,5 +28,9 @@ export class DevicesRepository extends BaseAbstractRepository {
         return await this.buildCollection().updateOne(filter, {$set: device}, { upsert: false });
     }
 
+    public async getDevice(id: fastifyMongodb.ObjectId) {
+        return await this.buildCollection().findOne({ _id: id }) as Device | null;
+    }
+
     dispose() {}
 }

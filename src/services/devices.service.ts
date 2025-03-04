@@ -26,5 +26,11 @@ export class DevicesService {
         return await this.devicesRepository.patchDevice(buildObjectId(id), device);
     }
 
+    public async getDevice(id: string) {
+        this.logger.info(`Attempting to get device ID ${id}`);
+
+        return await this.devicesRepository.getDevice(buildObjectId(id));
+    }
+
     dispose() {}
 }
