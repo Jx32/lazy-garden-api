@@ -16,12 +16,14 @@ export class DevicesService {
 
     public async upsertDevice(device: Device) {
         this.logger.info(`Attempting to upsert device ID ${device._id}`);
+        device.lastReceivedUpdate = new Date().toISOString();
 
         return await this.devicesRepository.upsertDevice(device);
     }
 
     public async patchDevice(id: string, device: DevicePatch) {
         this.logger.info(`Attempting to patch device ID ${id}`);
+        device.lastReceivedUpdate = new Date().toISOString();
 
         return await this.devicesRepository.patchDevice(buildObjectId(id), device);
     }
