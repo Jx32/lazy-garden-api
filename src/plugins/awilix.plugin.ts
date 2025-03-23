@@ -6,6 +6,9 @@ import { FastifyMongoObject } from "@fastify/mongodb";
 import { DevicesController } from "../controllers/devices.controller";
 import { DevicesService } from "../services/devices.service";
 import { DevicesRepository } from "../repositories/devices.repository";
+import { HistoryRepository } from "../repositories/history.repository";
+import { HistoryService } from "../services/history.service";
+import { HistoryController } from "../controllers/history.controller";
 
 declare module "@fastify/awilix" {
     interface Cradle {
@@ -14,6 +17,9 @@ declare module "@fastify/awilix" {
         devicesController: DevicesController,
         devicesService: DevicesService,
         devicesRepository: DevicesRepository,
+        historyRepository: HistoryRepository,
+        historyService: HistoryService,
+        historyController: HistoryController,
     }
 }
 
@@ -30,13 +36,25 @@ const axilixPlugin = async (fastify: FastifyInstance, options: RegisterOptions) 
             lifetime: Lifetime.SINGLETON,
             dispose: module => module.dispose()
         }),
+        historyController: asClass(HistoryController, {
+            lifetime: Lifetime.SINGLETON,
+            dispose: module => module.dispose()
+        }),
         // Services
         devicesService: asClass(DevicesService, {
             lifetime: Lifetime.SINGLETON,
             dispose: module => module.dispose()
         }),
+        historyService: asClass(HistoryService, {
+            lifetime: Lifetime.SINGLETON,
+            dispose: module => module.dispose()
+        }),
         // Repositories
         devicesRepository: asClass(DevicesRepository, {
+            lifetime: Lifetime.SINGLETON,
+            dispose: module => module.dispose()
+        }),
+        historyRepository: asClass(HistoryRepository, {
             lifetime: Lifetime.SINGLETON,
             dispose: module => module.dispose()
         }),
