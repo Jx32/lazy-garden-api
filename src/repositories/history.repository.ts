@@ -17,6 +17,12 @@ export class HistoryRepository extends BaseAbstractRepository {
             createdOn: history.createdOn || new Date().toISOString(),
         });
     }
+
+    public async deleteHistoryByDeviceId(deviceId: string) {
+        return await this.buildCollection().deleteMany({
+            deviceId: buildObjectId(deviceId),
+        });
+    }
     
 
     dispose() {}

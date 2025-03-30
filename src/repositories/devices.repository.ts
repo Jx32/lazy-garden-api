@@ -32,5 +32,9 @@ export class DevicesRepository extends BaseAbstractRepository {
         return await this.buildCollection().findOne({ _id: id }) as Device | null;
     }
 
+    public async deleteDevice(id: fastifyMongodb.ObjectId) {
+        return await this.buildCollection().deleteOne({ _id: id });
+    }
+
     dispose() {}
 }

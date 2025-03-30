@@ -41,6 +41,19 @@ export class DevicesController {
         reply.code(200).send(device);
     }
 
+    public async deleteDevice(req: FastifyRequest, reply: FastifyReply) {
+        const { id } = req.params as { id: string };
+
+        const result = await this.devicesService.deleteDevice(id);
+
+        if (result.deletedCount === 0) {
+            reply.code(404);
+            return;
+        }
+
+        reply.code(200);
+    }
+
     public dispose() {
 
     }
