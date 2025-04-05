@@ -24,5 +24,11 @@ export class HistoryService {
         return await this.historyRepository.deleteHistoryByDeviceId(deviceId);
     }
 
+    public async getHistoryByDeviceId(deviceId: string) {
+        this.logger.info(`Attempting to get histories by device ID ${deviceId}`);
+        
+        return await this.historyRepository.getHistoryByDeviceId(deviceId);
+    }
+
     dispose() {}
 }

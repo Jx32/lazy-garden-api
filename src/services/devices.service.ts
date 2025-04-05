@@ -44,5 +44,11 @@ export class DevicesService {
         return await this.devicesRepository.deleteDevice(buildObjectId(id));
     }
 
+    public async getDevices() {
+        this.logger.info(`Attempting to get devices`);
+
+        return await this.devicesRepository.getDevices();
+    }
+
     dispose() {}
 }

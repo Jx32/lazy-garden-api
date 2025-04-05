@@ -36,5 +36,30 @@ export class DevicesRepository extends BaseAbstractRepository {
         return await this.buildCollection().deleteOne({ _id: id });
     }
 
+    public async getDevices() {
+        const cursor = this.buildCollection().find({}, {
+            limit: 20,
+        });
+        let result = [];
+
+        while (await cursor.hasNext()) {
+            result.push(await cursor.next());
+        }
+
+        if (result.length === 0) {
+            return [];
+        }
+
+        return result.map((device) => {
+            return {
+                _id: device!._id.toString(),
+                name: device!.name,
+                activationSeconds: device!.activationSeconds,
+                irrigateSeconds: device!.irrigateSeconds,
+                lastReceivedUpdate: device!.lastReceivedUpdate,
+            };
+        }) as Device[];
+    }
+
     dispose() {}
 }

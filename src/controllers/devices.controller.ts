@@ -54,6 +54,17 @@ export class DevicesController {
         reply.code(200);
     }
 
+    public async getDevices(req: FastifyRequest, reply: FastifyReply) {
+        const devices = await this.devicesService.getDevices();
+
+        if (!devices || devices.length === 0) {
+            reply.code(404);
+            return;
+        }
+
+        reply.code(200).send(devices);
+    }
+
     public dispose() {
 
     }

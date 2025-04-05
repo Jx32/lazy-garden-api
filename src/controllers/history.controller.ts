@@ -25,5 +25,13 @@ export class HistoryController {
         reply.code(200);
     }
 
+    public async getHistoryByDeviceId(req: FastifyRequest, reply: FastifyReply) {
+        const { id } = req.params as { id: string };
+
+        const result = await this.historyService.getHistoryByDeviceId(id);
+
+        reply.send(result);
+    }
+
     public dispose() {}
 }

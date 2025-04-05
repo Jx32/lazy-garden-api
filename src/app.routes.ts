@@ -3,12 +3,16 @@ import { FastifyInstance, FastifySchema } from "fastify";
 export const appRoutes = async (fastify: FastifyInstance) => {
     registerSchemas(fastify);
 
+    fastify.get("/device", { schema: buildGetDevicesSchema() }, async (req, reply) => await fastify.diContainer.cradle.devicesController.getDevices(req, reply));
     fastify.put("/device", { schema: buildPutDeviceSchema() }, async (req, reply) => await fastify.diContainer.cradle.devicesController.upsertDevice(req, reply));
     fastify.patch("/device/:id", { schema: buildPatchDeviceSchema() }, async (req, reply) => await fastify.diContainer.cradle.devicesController.patchDevice(req, reply));
     fastify.get("/device/:id", { schema: buildGetDeviceSchema() }, async (req, reply) => await fastify.diContainer.cradle.devicesController.getDevice(req, reply));
     fastify.delete("/device/:id", { schema: buildDeleteDeviceSchema() }, async (req, reply) => await fastify.diContainer.cradle.devicesController.deleteDevice(req, reply));
 
     fastify.post("/device/:id/history", { schema: buildPostHistorySchema() }, async (req, reply) => await fastify.diContainer.cradle.historyController.postHistory(req, reply));
+    fastify.get("/device/:id/history", { schema: buildGetHistoryByDeviceSchema() }, async (req, reply) => await fastify.diContainer.cradle.historyController.getHistoryByDeviceId(req, reply));
+
+    fastify.get("/sync-time", { schema: buildSyncDeviceTimeSchema() }, async (req, reply) => await fastify.diContainer.cradle.utilController.getSecondsSinceMidnight(req, reply));
 }
 
 const buildPutDeviceSchema = (): FastifySchema => {
@@ -65,6 +69,25 @@ const buildDeleteDeviceSchema = (): FastifySchema => {
         }
     } as FastifySchema;
 }
+const buildGetDevicesSchema = (): FastifySchema => {
+    return {
+        response: {
+            "4xx": { $ref: "4xxGenericResponse#", description: "A validation error was ocurred" },
+            "5xx": { $ref: "5xxGenericResponse#", description: "An internal error was ocurred" },
+            "2xx": {
+                description: "Devices",
+                content: {
+                    "application/json": {
+                        schema: {
+                            type: "array",
+                            items: { $ref: "device#" },
+                        }
+                    }
+                }
+            }
+        }
+    } as FastifySchema;
+}
 const buildPostHistorySchema = (): FastifySchema => {
     return {
         body: { $ref: "history#" }, 
@@ -74,6 +97,39 @@ const buildPostHistorySchema = (): FastifySchema => {
             "2xx": {
                 type: "null",
                 description: "History posted"
+            }
+        }
+    } as FastifySchema;
+}
+const buildGetHistoryByDeviceSchema = (): FastifySchema => {
+    return {
+        response: {
+            "4xx": { $ref: "4xxGenericResponse#", description: "A validation error was ocurred" },
+            "5xx": { $ref: "5xxGenericResponse#", description: "An internal error was ocurred" },
+            "2xx": {
+                description: "Histories",
+                content: {
+                    "application/json": {
+                        schema: {
+                            type: "array",
+                            items: { $ref: "history#" },
+                        }
+                    }
+                }
+            }
+        }
+    } as FastifySchema;
+}
+const buildSyncDeviceTimeSchema = (): FastifySchema => {
+    return {
+        response: {
+            "4xx": { $ref: "4xxGenericResponse#", description: "A validation error was ocurred" },
+            "5xx": { $ref: "5xxGenericResponse#", description: "An internal error was ocurred" },
+            "2xx": {
+                type: "object",
+                properties: {
+                    seconds: { type: "number" }
+                }
             }
         }
     } as FastifySchema;
@@ -106,6 +162,7 @@ const registerSchemas = (fastify: FastifyInstance) => {
         $id: "history",
         type: "object",
         properties: {
+            _id: { $ref: "id#" },
             deviceId: { $ref: "id#" },
             key: { type: "string" },
             description: { type: "string" },
