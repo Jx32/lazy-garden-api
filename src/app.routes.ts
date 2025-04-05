@@ -22,8 +22,12 @@ const buildPutDeviceSchema = (): FastifySchema => {
             "4xx": { $ref: "4xxGenericResponse#", description: "A validation error was ocurred" },
             "5xx": { $ref: "5xxGenericResponse#", description: "An internal error was ocurred" },
             "2xx": {
-                type: "null",
-                description: "Device registered"
+                description: "Device registered",
+                content: {
+                    "application/json": {
+                        schema: { $ref: "device#" }
+                    }
+                }
             }
         }
     } as FastifySchema;

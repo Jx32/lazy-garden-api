@@ -14,9 +14,11 @@ export class DevicesController {
     public async upsertDevice(req: FastifyRequest, reply: FastifyReply) {
         const entity: Device = req.body as Device;
 
-        await this.devicesService.upsertDevice(entity);
+        const res = await this.devicesService.upsertDevice(entity);
+        
+        entity._id = res.upsertedId?.toString();
 
-        reply.code(200);
+        reply.code(200).send(entity);
     }
 
     public async patchDevice(req: FastifyRequest, reply: FastifyReply) {
