@@ -11,6 +11,7 @@ export const appRoutes = async (fastify: FastifyInstance) => {
 
     fastify.post("/device/:id/history", { schema: buildPostHistorySchema() }, async (req, reply) => await fastify.diContainer.cradle.historyController.postHistory(req, reply));
     fastify.get("/device/:id/history", { schema: buildGetHistoryByDeviceSchema() }, async (req, reply) => await fastify.diContainer.cradle.historyController.getHistoryByDeviceId(req, reply));
+    fastify.delete("/device/:id/history", { schema: buildDeleteHistoryByDeviceSchema() }, async (req, reply) => await fastify.diContainer.cradle.historyController.deleteHistoryByDeviceId(req, reply));
 
     fastify.get("/sync-time", { schema: buildSyncDeviceTimeSchema() }, async (req, reply) => await fastify.diContainer.cradle.utilController.getSecondsSinceMidnight(req, reply));
 }
@@ -120,6 +121,18 @@ const buildGetHistoryByDeviceSchema = (): FastifySchema => {
                         }
                     }
                 }
+            }
+        }
+    } as FastifySchema;
+}
+const buildDeleteHistoryByDeviceSchema = (): FastifySchema => {
+    return {
+        response: {
+            "4xx": { $ref: "4xxGenericResponse#", description: "A validation error was ocurred" },
+            "5xx": { $ref: "5xxGenericResponse#", description: "An internal error was ocurred" },
+            "2xx": {
+                type: "null",
+                description: "Device deleted"
             }
         }
     } as FastifySchema;

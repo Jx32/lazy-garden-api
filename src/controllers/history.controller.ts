@@ -1,5 +1,4 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { DevicePatch } from "../interfaces/device-patch";
 import { HistoryService } from "../services/history.service";
 import { History } from "../interfaces/history";
 import { BadRequestError } from "../errors/bad-request.error";
@@ -31,6 +30,14 @@ export class HistoryController {
         const result = await this.historyService.getHistoryByDeviceId(id);
 
         reply.send(result);
+    }
+
+    public async deleteHistoryByDeviceId(req: FastifyRequest, reply: FastifyReply) {
+        const { id } = req.params as { id: string };
+
+        await this.historyService.deleteHistoryByDeviceId(id);
+
+        reply.code(200);
     }
 
     public dispose() {}
