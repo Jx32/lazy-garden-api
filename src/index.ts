@@ -1,4 +1,4 @@
-import fastify, { FastifyInstance } from "fastify";
+import fastify, { FastifyInstance, FastifyReply, FastifyRequest, HookHandlerDoneFunction } from "fastify";
 import { handleRequestError } from "./errors/error.handler";
 import corsPlugin from "./plugins/cors.plugin";
 import mongoPlugin from "./plugins/mongo.plugin";
@@ -21,6 +21,13 @@ server.register(mongoPlugin);
 server.register(awilixPlugin);
 
 server.register(appRoutes, { prefix: "api/v1" });
+
+server.addHook("onRequest", (req: FastifyRequest, reply: FastifyReply, done: HookHandlerDoneFunction) => {
+    const secondsSinceMidnight = req.diScope.cradle.utilService.getSecondsSinceMidnight();
+
+    reply.header("sync", secondsSinceMidnight);
+    done();
+});
 
 const startServer = async () => {
     try {
