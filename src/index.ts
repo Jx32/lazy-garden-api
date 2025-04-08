@@ -22,13 +22,6 @@ server.register(awilixPlugin);
 
 server.register(appRoutes, { prefix: "api/v1" });
 
-server.addHook("onRequest", (req: FastifyRequest, reply: FastifyReply, done: HookHandlerDoneFunction) => {
-    const secondsSinceMidnight = req.diScope.cradle.utilService.getSecondsSinceMidnight();
-
-    reply.header("sync", secondsSinceMidnight);
-    done();
-});
-
 const startServer = async () => {
     try {
         const port: number = parseInt(process.env.PORT || "8080");
